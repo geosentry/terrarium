@@ -1,2 +1,2 @@
 # terrarium
-Earth Engine Toolkit Library
+Earth Engine & GIS tooling Python Package for the GeoSentry 🌍 Platform.
