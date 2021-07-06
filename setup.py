@@ -7,7 +7,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name="terrarium",
-    version="0.0.1",
+    version="0.1.0",
 
     description='Earth Engine & GIS tooling Python Package for the GeoSentry Platform.',
     long_description=long_description, 
@@ -39,7 +39,6 @@ setup(
     install_requires=[
         'earthengine-api==0.1.271',
         'google-api-core==1.30.0',
-        'google-cloud-firestore==2.1.3',
         'google-cloud-secret-manager==2.5.0',
     ],   
 )
