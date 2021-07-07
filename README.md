@@ -1,11 +1,12 @@
 # terrarium
+![Banner](banner.jpg)
 **Terrarium** is a Python Package that contains the **Earth Engine** and GIS related tooling for the the **GeoSentry** 🌍 Platform.
 
 **GeoSentry** is a geospatial observation platform with spectral, topographical and comparative analytics along with a community-curated gallery of stunning satellite imagery powered by ESA's **Sentinel-2** & **Google Earth Engine**.
 
 **Version: 0.2.0**  
 **Language: Python 3.9**  
-**License: MIT**
+**License: MIT**  
 **Status: In Heavy Development**  
 
 
