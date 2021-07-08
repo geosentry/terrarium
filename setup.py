@@ -40,5 +40,7 @@ setup(
         'earthengine-api==0.1.271',
         'google-api-core==1.30.0',
         'google-cloud-secret-manager==2.5.0',
+        'Shapely==1.7.1',
+        'pyproj==3.1.0'
     ],   
 )
