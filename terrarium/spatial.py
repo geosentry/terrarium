@@ -6,6 +6,7 @@ for geometrical and spatial manipulations.
 """
 import ee
 import json
+import typing
 import shapely.geometry as shapes
 
 def generate_earthengine_geometry(geojson: str) -> ee.Geometry:
@@ -37,7 +38,7 @@ def generate_earthengine_bounds(west: float, south: float, east: float, north: f
     except Exception as e:
         raise RuntimeError(f"could not construct ee.Geometry. {e}")
 
-def generate_shapely_geometry(geojson: str) -> shapes.shape:
+def generate_shapely_geometry(geojson: str) -> typing.Union[shapes.Point, shapes.Polygon, shapes.LineString]:
     """ A function that returns a Shapely Geometry for a given GeoJSON string. """
     try:
         geodata = json.loads(geojson)
@@ -59,37 +60,50 @@ def generate_shapely_geometry(geojson: str) -> shapes.shape:
 
 def generate_shapely_geojson(shape: shapes.shape) -> str:
     """ A function that returns a GeoJSON string for a given Shapely Geometry. """
-    if not isinstance(shape, shapes.shape):
+    if not isinstance(shape, (shapes.Point, shapes.Polygon, shapes.LineString)):
         raise RuntimeError("could not generate geojson. not a shapely shape")
 
     try:
-        geojson = shapes.mapping(shape)
+        geometrydata = shapes.mapping(shape)
+        geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": geometrydata
+                }
+            ]
+        }
+
         return json.dumps(geojson)
 
     except Exception as e:
         raise RuntimeError(f"could not generate geojson. error: {e}")
 
-def filter_coverage(collection: ee.ImageCollection, geometry: ee.Geometry) -> ee. ImageCollection:
-    """
-    A function that returns an Earth Engine ImageCollection that has been filtered such that every 
-    Image in a given ImageCollection has full coverage for a given Earth Engine Geometry.
+def generate_area(shape: shapes.Polygon) -> dict:
+    """ A function that returns a mapping of area units to the area for a given Shapely Geometry. """
+    if not isinstance(shape, shapes.Polygon):
+        raise RuntimeError("could not calculate area. not a shapely polygon")
 
-    This coverage filter is performed by assigning a coverage value to each image 
-    which is value between 0-100 that represents the percentage of geometry coverage 
-    in that image. The collection is then filtered based on this value.
-    """
-    # Assign a coverage value to each Image in the ImageCollection
-    collection = collection.map(lambda image: image.set({
-        "coverage": ee.Number.expression("100-(((expected-actual)/expected)*100)", {
-            "expected": geometry.area(5), 
-            "actual": image.clip(geometry).geometry().area(5)
-        })
-    }))
+    try:
+        from area import area
 
-    # Filter the collection to only have Images with 100% coverage
-    collection = collection.filter(ee.Filter.eq("coverage", 100))
-    # Return the filtered collection
-    return collection
+        # Convert the shape into mapping
+        data = shapes.mapping(shape)
+        # Calculate the area of the shape in SQM
+        geoarea = area(data)
+
+    except Exception as e:
+        raise RuntimeError(f"could not calculate area. error: {e}")
+
+    try:
+        conversion = {"SQM": 1, "SQKM": 0.000001, "ACRE": 0.000247, "HA": 0.0001}
+        # Create a dictionary with units as key and the corresponding area as the value
+        return {key: value * geoarea for key, value in conversion.items()}
+
+    except Exception as e:
+        raise RuntimeError(f"")
 
 def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
     """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
@@ -176,3 +190,28 @@ def reshape_linestring(shape: shapes.LineString) -> shapes.Polygon:
 
     except Exception as e:
         raise RuntimeError(f"could not reshape linestring. error: {e}.")
+
+def filter_coverage(collection: ee.ImageCollection, geometry: ee.Geometry) -> ee. ImageCollection:
+    """
+    A function that returns an Earth Engine ImageCollection that has been filtered such that every 
+    Image in a given ImageCollection has full coverage for a given Earth Engine Geometry.
+
+    This coverage filter is performed by assigning a coverage value to each image 
+    which is value between 0-100 that represents the percentage of geometry coverage 
+    in that image. The collection is then filtered based on this value.
+    """
+    # TODO: check if earth engine is initialized
+    # TODO: error handling
+
+    # Assign a coverage value to each Image in the ImageCollection
+    collection = collection.map(lambda image: image.set({
+        "coverage": ee.Number.expression("100-(((expected-actual)/expected)*100)", {
+            "expected": geometry.area(5), 
+            "actual": image.clip(geometry).geometry().area(5)
+        })
+    }))
+
+    # Filter the collection to only have Images with 100% coverage
+    collection = collection.filter(ee.Filter.eq("coverage", 100))
+    # Return the filtered collection
+    return collection
