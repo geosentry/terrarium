@@ -4,7 +4,7 @@
 
 **GeoSentry** is a geospatial observation platform with spectral, topographical and comparative analytics along with a community-curated gallery of stunning satellite imagery powered by ESA's **Sentinel-2** & **Google Earth Engine**.
 
-**Version: 0.2.0**  
+**Version: 0.3.0**  
 **Language: Python 3.9**  
 **License: MIT**  
 **Status: In Heavy Development**  
@@ -15,6 +15,11 @@
 The package can be installed using ``pip`` with the following command.
 ```shell
 pip install git+https://github.com/geosentry/terrarium#egg=terrarium
+```
+
+A specific version of the package can be installed using version. For example, the ``v0.3.0`` tag can be installed using
+```shell
+pip install git+https://github.com/geosentry/terrarium#egg=terrarium@v0.3.0
 ```
 
 ## Background
