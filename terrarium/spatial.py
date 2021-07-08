@@ -28,6 +28,15 @@ def generate_earthengine_geometry(geojson: str) -> ee.Geometry:
     except Exception as e:
         raise RuntimeError(f"could not construct ee.Geometry. {e}")
 
+def generate_earthengine_bounds(west: float, south: float, east: float, north: float) -> ee.Geometry:
+    """ A function that returns an Earth Engine Geometry for a given 4 bounding points. """
+    try:
+        geometry = ee.Geometry.BBox(west, south, east, north)
+        return geometry
+
+    except Exception as e:
+        raise RuntimeError(f"could not construct ee.Geometry. {e}")
+
 def generate_shapely_geometry(geojson: str) -> shapes.shape:
     """ A function that returns a Shapely Geometry for a given GeoJSON string. """
     try:
