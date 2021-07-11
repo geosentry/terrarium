@@ -100,10 +100,10 @@ def generate_area(shape: shapes.Polygon) -> dict:
     try:
         conversion = {"SQM": 1, "SQKM": 0.000001, "ACRE": 0.000247, "HA": 0.0001}
         # Create a dictionary with units as key and the corresponding area as the value
-        return {key: value * geoarea for key, value in conversion.items()}
+        return {key: round(value * geoarea, 3) for key, value in conversion.items()}
 
     except Exception as e:
-        raise RuntimeError(f"")
+        raise RuntimeError(f"could not calculate area conversions. error: {e}")
 
 def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
     """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
