@@ -2,6 +2,13 @@
 
 **Current Version: v0.2.4**
 
+## v0.3
+
+### v0.3.0
+- Refactored the Earth Engine Initialization Runtime. The initialization function now accepts a credentials string and does not concern itself with how the credentials are obtained and is left upto the runtime that calls it.
+- Removed the dependency on Secret Manager. 
+- Initialization Runtime is now idempotent and can be called multiple times without creating new sessions each time.
+
 ## v0.2
 
 ### v0.2.4
