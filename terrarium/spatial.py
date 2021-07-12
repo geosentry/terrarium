@@ -122,6 +122,33 @@ def generate_centroid(shape: shapes.Polygon) -> dict:
     except Exception as e:
         raise RuntimeError(f"could not generate centroid. error: {e}")
 
+def generate_locarion(longitude: float, latitude: float) -> dict:
+    """ A function that returns the location address for a given set of coordinates as longitude and latitude values. """
+    try:
+        import os
+        import googlemaps
+
+        # Retrieve the Google Maps Geocoding API Key
+        geocodingapikey = os.environ['MAPS_GEOCODING_APIKEY']
+        # Create the Google Maps Client
+        gmaps = googlemaps.Client(key=geocodingapikey)
+
+    except KeyError:
+        raise RuntimeError(f"could not setup maps client. geocoding API key is not set in environment variables.")
+    except Exception as e:
+        raise RuntimeError(f"could not setup maps client. error: {e}")
+
+    try:
+        # Perform a reverse geocode lookup for the coordinates
+        result = gmaps.reverse_geocode((latitude, longitude), language="English", location_type="APPROXIMATE", result_type=f"administrative_area_level_2")
+        # Retrieve the formatted address from the result
+        address = result[0]["formatted_address"]
+        # Return the location address
+        return address
+
+    except Exception as e:
+        raise RuntimeError(f"could not generate geocoded address. error: {e}")
+
 def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
     """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
     if not isinstance(shape, shapes.Polygon):
