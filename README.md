@@ -1,26 +1,16 @@
-# terrarium
+# Terrarium
 ![Banner](banner.jpg)
-**Terrarium** is a Python Package that contains the **Earth Engine** and GIS related tooling for the the **GeoSentry** 🌍 Platform.
 
-**GeoSentry** is a geospatial observation platform with spectral, topographical and comparative analytics along with a community-curated gallery of stunning satellite imagery powered by ESA's **Sentinel-2** & **Google Earth Engine**.
+### **Terrarium** is a Python Package that contains the **Earth Engine** and **GIS** related tooling for the **GeoSentry** 🌍 Platform.
 
-**Version: 0.2.3**  
+**Version: 0.2.4**  
 **Language: Python 3.9**  
 **License: MIT**  
-**Status: In Heavy Development**  
+**Status: In Development**  
 
-## Installation
-The package can be installed using ``pip`` with the following command.
-```shell
-pip install git+https://github.com/geosentry/terrarium#egg=terrarium
-```
+## Overview
+**GeoSentry** is a geospatial observation platform with spectral, topographical and comparative analytics along with a community-curated gallery of stunning satellite imagery powered by ESA's **Sentinel-2** & **Google Earth Engine**.
 
-A specific version of the package can be installed using version. For example, the ``v0.2.3`` tag can be installed using
-```shell
-pip install git+https://github.com/geosentry/terrarium.git@v0.3.0#egg=terrarium
-```
-
-## Background
 ### Google Earth Engine
 **Terrarium** uses the [Earth Engine Python API](https://github.com/google/earthengine-api) for much of its geospatial manipulation functionality and satellite imagery datasources. Google Earth Engine is a planetary-scale platform for Earth science data & analysis that is powered by Google's Cloud Infrastructure and integrates well with Google Cloud Platform.
 
@@ -36,14 +26,33 @@ Cloudiness values are generated using *Sentinel-2 Cloud Probability* dataset whi
 ### Asset Generation
 !todo
 
+
+## Installation
+The package can be installed with ``pip`` using the following command.
+```shell
+pip install git+https://github.com/geosentry/terrarium#egg=terrarium
+```
+
+A specific version of the package can also be installed. The ``v0.2.0`` tag can be installed using
+```shell
+pip install git+https://github.com/geosentry/terrarium.git@v0.2.0#egg=terrarium
+```
 ### Authentication
-Authentication for the Google Earth Engine API is done using a GCP IAM Service Account and GCP Secret Manager. This auth flow requires 2 Service Accounts.
+The package requires setup for authentication with services such as Google Earth Engine and Google Maps Platform.
 
-1. The first service account is created and registed with Earth Engine with the guidelines specified in https://developers.google.com/earth-engine/guides/service_account. 
-2. This service account is granted the ``Storage Object Admin`` IAM role to enable asset exports to Cloud Storage Bucket.
-2. A credentials key is generated for this service account and stored in GCP Secret Manager. This secret is accessed by this library when the ``initialize()`` function is called.
-3. In order to access the secret, another service account is created and granted the ``Secret Manager Secret Accessor`` IAM role.
-4. A credential key is generated for the second service account and stored on the local machine/container that uses this **Terrarium**.
-5. An environment variable ``GOOGLE_APPLICATION_CREDENTIALS`` is set with the path to the credentials file. Secret Manager uses this path and the file it points to authenticate and access the secret.
+#### Google Earth Engine
+Authentication for the Google Earth Engine API is done using a GCP IAM Service Account.
 
-**Note**: Cloud Functions and Cloud Run automatically generate a key and set the environment variable based on the service account assoicated with the service.
+1. A Service Account needs to be created and registered with Earth Engine as specified in https://developers.google.com/earth-engine/guides/service_account. 
+2. This Service Account needs the ``Storage Object Admin`` IAM role to perform exports to a Cloud Storage Bucket.
+3. Currently the credentials are retrieved from **Secret Manager**, but this flow will be modified in v0.3
+
+#### Google Maps Geocoding API
+Authenticating with Google Maps Geocoding API is done using an API Key.
+
+1. Create an API Key with steps specified in https://developers.google.com/maps/gmp-get-started#create-project.
+2. Restrict the API Key for usage with the Geocoding API
+3. Store the API Key as environment variable ``MAPS_GEOCODING_APIKEY``.
+
+### Changelog
+The package changelog is located in the CHANGELOG.md file in the root directory of the repository.
