@@ -105,6 +105,23 @@ def generate_area(shape: shapes.Polygon) -> dict:
     except Exception as e:
         raise RuntimeError(f"could not calculate area conversions. error: {e}")
 
+def generate_centroid(shape: shapes.Polygon) -> dict:
+    """ A function that returns the centroid coordinates for a given Shapely Geometry as a mapping. """
+    if not isinstance(shape, shapes.Polygon):
+        raise RuntimeError("could not generate centroid. not a shapely polygon")
+
+    try:
+        # Retrieve the centroid coordinates
+        centroid = shape.centroid.coords[:][0]
+        # Generate the mapping and return it
+        return {
+            "longitude": centroid[0],
+            "latitude": centroid[1]
+        }
+
+    except Exception as e:
+        raise RuntimeError(f"could not generate centroid. error: {e}")
+
 def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
     """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
     if not isinstance(shape, shapes.Polygon):
