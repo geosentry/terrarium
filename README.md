@@ -3,7 +3,7 @@
 
 ### **Terrarium** is a Python Package that contains the **Earth Engine** and **GIS** related tooling for the **GeoSentry** 🌍 Platform.
 
-**Version: 0.2.4**  
+**Version: 0.3.0**  
 **Language: Python 3.9**  
 **License: MIT**  
 **Status: In Development**  
@@ -38,21 +38,21 @@ A specific version of the package can also be installed. The ``v0.2.0`` tag can 
 pip install git+https://github.com/geosentry/terrarium.git@v0.2.0#egg=terrarium
 ```
 ### Authentication
-The package requires setup for authentication with services such as Google Earth Engine and Google Maps Platform.
+The package requires authentication setup to use services such as Google Earth Engine and Google Maps Platform.
 
 #### Google Earth Engine
-Authentication for the Google Earth Engine API is done using a GCP IAM Service Account.
+Authentication for the Google Earth Engine API is done using a IAM Service Account.
 
-1. A Service Account needs to be created and registered with Earth Engine as specified in https://developers.google.com/earth-engine/guides/service_account. 
-2. This Service Account needs the ``Storage Object Admin`` IAM role to perform exports to a Cloud Storage Bucket.
-3. Currently the credentials are retrieved from **Secret Manager**, but this flow will be modified in v0.3
+1. A Service Account needs to be created and registered with Earth Engin. Refer to the [guide on creating and registering service accounts](https://developers.google.com/earth-engine/guides/service_account) for Earth Engine. 
+2. Grant the ``Storage Object Admin`` IAM role to the Service Account. This allows it to perform exports to a Cloud Storage Bucket.
+3. Generate a key for the Service Account and store it somewhere safe.
+4. **Terrarium** requires the contents of this file as a bytes string to authenticate the Earth Engine Session.
 
-#### Google Maps Geocoding API
-Authenticating with Google Maps Geocoding API is done using an API Key.
+#### Google Maps Platform
+Authentication for the Google Maps APIs are done using an API Key. The **Terrarium** package currently uses the **Geocoding API** for reverse coding and address resolution. API Keys can be created with the steps specified in this [guide](https://developers.google.com/maps/gmp-get-started#create-project).
 
-1. Create an API Key with steps specified in https://developers.google.com/maps/gmp-get-started#create-project.
-2. Restrict the API Key for usage with the Geocoding API
-3. Store the API Key as environment variable ``MAPS_GEOCODING_APIKEY``.
+1. Create an API Key for the **Geocoding API** and restrict it usage for that API only.
+2. Store the API Key as the environment variable ``MAPS_GEOCODING_APIKEY``.
 
-### Changelog
-The package changelog is located in the CHANGELOG.md file in the root directory of the repository.
+## Changelog
+The package changelog is located in the ``CHANGELOG.md`` file in the root directory of the repository.
