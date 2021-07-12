@@ -9,7 +9,7 @@ import json
 import typing
 import shapely.geometry as shapes
 
-def generate_earthengine_geometry(geojson: str) -> ee.Geometry:
+def generate_earthenginegeometry_fromgeojson(geojson: str) -> ee.Geometry:
     """ A function that returns an Earth Engine Geometry for a given GeoJSON string. """
     try:
         geodata = json.loads(geojson)
@@ -29,7 +29,7 @@ def generate_earthengine_geometry(geojson: str) -> ee.Geometry:
     except Exception as e:
         raise RuntimeError(f"could not construct ee.Geometry. {e}")
 
-def generate_earthengine_bounds(west: float, south: float, east: float, north: float) -> ee.Geometry:
+def generate_earthenginegeometry_frombounds(west: float, south: float, east: float, north: float) -> ee.Geometry:
     """ A function that returns an Earth Engine Geometry for a given 4 bounding points. """
     try:
         geometry = ee.Geometry.BBox(west, south, east, north)
@@ -38,7 +38,7 @@ def generate_earthengine_bounds(west: float, south: float, east: float, north: f
     except Exception as e:
         raise RuntimeError(f"could not construct ee.Geometry. {e}")
 
-def generate_shapely_geometry(geojson: str) -> typing.Union[shapes.Point, shapes.Polygon, shapes.LineString]:
+def generate_shape_fromgeojson(geojson: str) -> typing.Union[shapes.Point, shapes.Polygon, shapes.LineString]:
     """ A function that returns a Shapely Geometry for a given GeoJSON string. """
     try:
         geodata = json.loads(geojson)
@@ -58,7 +58,7 @@ def generate_shapely_geometry(geojson: str) -> typing.Union[shapes.Point, shapes
     except Exception as e:
         raise RuntimeError(f"could not construct shapely geometry. {e}")
 
-def generate_shapely_geojson(shape: shapes.shape) -> str:
+def generate_geojson_fromshape(shape: shapes.shape) -> str:
     """ A function that returns a GeoJSON string for a given Shapely Geometry. """
     if not isinstance(shape, (shapes.Point, shapes.Polygon, shapes.LineString)):
         raise RuntimeError("could not generate geojson. not a shapely shape")
