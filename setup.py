@@ -38,6 +38,7 @@ setup(
     python_requires='>=3.8, <4',
     install_requires=[
         'earthengine-api==0.1.271',
+        'googlemaps==4.4.5',
         'google-api-core==1.30.0',
         'google-cloud-secret-manager==2.5.0',
         'Shapely==1.7.1',
