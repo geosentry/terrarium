@@ -142,10 +142,8 @@ def generate_location(longitude: float, latitude: float) -> dict:
     try:
         # Perform a reverse geocode lookup for the coordinates
         result = gmaps.reverse_geocode((latitude, longitude), language="English", location_type="APPROXIMATE", result_type=f"administrative_area_level_2")
-        # Retrieve the formatted address from the result
-        address = result[0]["formatted_address"]
-        # Return the location address
-        return address
+        # Retrieve the formatted address from the result and return it
+        return result[0]["formatted_address"] if result else "limbo"
 
     except Exception as e:
         raise RuntimeError(f"could not generate geocoded address. error: {e}")
