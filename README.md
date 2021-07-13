@@ -3,7 +3,7 @@
 
 ### **Terrarium** is a Python Package that contains the **Earth Engine** and **GIS** related tooling for the **GeoSentry** 🌍 Platform.
 
-**Version: 0.3.0**  
+**Version: 0.3.1**  
 **Language: Python 3.9**  
 **License: MIT**  
 **Status: In Development**  
