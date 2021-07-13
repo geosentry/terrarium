@@ -4,6 +4,15 @@
 
 ## v0.3
 
+### v0.3.1
+- Updated temporal module function interfaces.
+- Unified the daterange and datebuffer functionality
+- Added error handling blocks for complex temporal module functions.
+- Renamed pallete module to palette (Spelling Fix) and renamed ``S2TC`` palette to ``S2TRUECOLOR``.
+- Renamed ``generate_locarion`` to ``generate_location`` (Spelling Fix).
+- Removed the ``filter_coverage`` function from the spatial module.
+- Removed the acquisition module.
+
 ### v0.3.0
 - Refactored the Earth Engine Initialization Runtime. The initialization function now accepts a credentials string and does not concern itself with how the credentials are obtained and is left upto the runtime that calls it.
 - Removed the dependency on Secret Manager. 
