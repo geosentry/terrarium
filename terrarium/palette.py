@@ -4,7 +4,7 @@ Terrarium Library
 The pallete module contains visualization parameters
 """
 # Sentinel-2 L2A RGB Visualization Parameters
-S2TC = {
+S2TRUECOLOR = {
     'min': 0, 
     'max': 255, 
     'bands': ['TCI_R', 'TCI_G', 'TCI_B']

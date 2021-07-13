@@ -5,7 +5,7 @@ The spectral module contains functions for generating
 various spectral manipulation on acquisition images.
 """
 import ee
-from . import pallete
+from . import palette
 
 def generate_TrueColor(image: ee.Image) -> ee.Image:
     """ 
@@ -45,7 +45,7 @@ def generate_TrueColor(image: ee.Image) -> ee.Image:
 
     try:
         # Apply the visualization pallete on the image
-        visualized = upsampled.visualize(**pallete.S2TC)
+        visualized = upsampled.visualize(**palette.S2TC)
     
     except ee.EEException as e:
         raise RuntimeError(f"true color visualization failed. {e}")
@@ -111,7 +111,7 @@ def generate_NDVI(image: ee.Image) -> ee.Image:
 
     try:
         # Apply the visualization pallete on the image
-        visualized = ndvi.visualize(**pallete.NDVIFOCAL)
+        visualized = ndvi.visualize(**palette.NDVIFOCAL)
 
     except ee.EEException as e:
         raise RuntimeError(f"ndvi visualization failed. {e}")
