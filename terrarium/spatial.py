@@ -4,18 +4,19 @@ Terrarium Package
 The spatial module contains function required 
 for geometric and spatial manipulations.
 """
-import ee
 import os
 import json
 import math
-import area
 import typing
-import googlemaps
-import pyproj
-import shapely.geometry as shapes
+import functools
 
-from functools import partial
-from shapely.ops import transform
+import ee
+import area
+import pyproj
+import googlemaps
+
+import shapely.ops as shapeops
+import shapely.geometry as shapes
 
 def generate_earthenginegeometry_fromgeojson(geojson: str) -> ee.Geometry:
     """ A function that returns an Earth Engine Geometry for a given GeoJSON string. """
@@ -150,33 +151,6 @@ def generate_location(longitude: float, latitude: float) -> dict:
     except Exception as e:
         raise RuntimeError(f"could not generate geocoded address. error: {e}")
 
-def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
-    """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
-    if not isinstance(shape, shapes.Polygon):
-        raise RuntimeError("could not reshape polygon. not a shapely polygon")
-
-    try:
-        # Retrieve the bounding coordinates
-        minx, miny, maxx, maxy = shape.bounds
-        # Calculate the polygon centroid
-        centroid = [(maxx+minx)/2, (maxy+miny)/2]
-        # Calculate the polygon diagonal
-        diagonal = math.sqrt((maxx-minx)**2+(maxy-miny)**2)
-
-    except Exception as e:
-        raise RuntimeError(f"could not reshape polygon. could not calculate polygon metrics. error: {e}")
-
-    try: 
-        # Create Point shape at the centroid
-        centroid = shapes.Point(centroid)
-        # Buffer the centroid point shape as a square (cap style = 3)
-        buffered = centroid.buffer(diagonal/2, cap_style=3)
-        # Return the reshaped polygon
-        return buffered
-    
-    except Exception as e:
-        raise RuntimeError(f"could not reshape polygon. error: {e}")
-
 def reshape_point(shape: shapes.Point, buffer: int = 2.5) -> shapes.Polygon:
     """ 
     A function that reshapes a Shapely Point into it's Square Bounding Box Polygon. 
@@ -196,7 +170,7 @@ def reshape_point(shape: shapes.Point, buffer: int = 2.5) -> shapes.Polygon:
 
     try:
         # Construct the projection partial
-        projection = partial(
+        projection = functools.partial(
             pyproj.transform, 
             pyproj.Proj(aeqd_proj), 
             pyproj.Proj('+proj=longlat +datum=WGS84')
@@ -209,12 +183,51 @@ def reshape_point(shape: shapes.Point, buffer: int = 2.5) -> shapes.Polygon:
         # Create an arbitrary point and buffer it as a square
         buffered = shapes.Point(0, 0).buffer(buffer * 1000, cap_style=3)
         # Transform the arbitrary point with the projection partial
-        buffered = transform(projection, buffered)
+        buffered = shapeops.transform(projection, buffered)
         # Return the reshaped point as polygon
         return buffered
 
     except Exception as e:
         raise RuntimeError(f"could not reshape point. error: {e}.")
+
+def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
+    """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
+    if not isinstance(shape, shapes.Polygon):
+        raise RuntimeError("could not reshape polygon. not a shapely polygon")
+
+    try:
+        # Retrieve the bounding coordinates
+        minx, miny, maxx, maxy = shape.bounds
+        # Calculate the polygon centroid
+        centroid = [(maxx+minx)/2, (maxy+miny)/2]
+        # Create Point shape at the centroid
+        centroid = shapes.Point(centroid)
+
+    except Exception as e:
+        raise RuntimeError(f"could not reshape polygon. could not calculate polygon centroid. error: {e}")
+
+    try: 
+        # Create the diagonal shape of the polygon
+        diagonal = shapes.LineString([(minx, miny), (maxx,maxy)])
+
+        # Create the projection geod class with the WGS84 ellipsoid
+        wgs84geod = pyproj.Geod(ellps="WGS84")
+        # Calculate the lenght of the diagonal in meters
+        length = wgs84geod.geometry_length(diagonal)
+        
+    except Exception as e:
+        raise RuntimeError(f"could not reshape polygon. could not calculate diagonal distance. error: {e}")
+
+    try:
+        # Calculate the buffer for the polygon based on the diagonal length in kms
+        buffer = (length/2)/1000
+        # Reshape the centroid shape with the buffer length
+        reshaped = reshape_point(centroid, buffer)
+        # Return the reshaped polygon
+        return reshaped
+
+    except Exception as e:
+        raise RuntimeError(f"could not reshape polygon. error: {e}")
 
 def reshape_linestring(shape: shapes.LineString) -> shapes.Polygon:
     """ A function that reshapes a Shapely Polygon into it's Square Bounding Box Polygon. """
