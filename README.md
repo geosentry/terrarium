@@ -3,7 +3,7 @@
 
 ### **Terrarium** is a Python Package that contains the **Earth Engine** and **GIS** related tooling for the **GeoSentry** 🌍 Platform.
 
-**Version: 0.3.1**  
+**Version: 0.3.2**  
 **Language: Python 3.9**  
 **License: MIT**  
 **Status: In Development**  
@@ -33,9 +33,9 @@ The package can be installed with ``pip`` using the following command.
 pip install git+https://github.com/geosentry/terrarium#egg=terrarium
 ```
 
-A specific version of the package can also be installed. The ``v0.2.0`` tag can be installed using
+A specific version of the package can also be installed. The ``v0.3.0`` tag can be installed using
 ```shell
-pip install git+https://github.com/geosentry/terrarium.git@v0.2.0#egg=terrarium
+pip install git+https://github.com/geosentry/terrarium.git@v0.3.0#egg=terrarium
 ```
 ### Authentication
 The package requires authentication setup to use services such as Google Earth Engine and Google Maps Platform.

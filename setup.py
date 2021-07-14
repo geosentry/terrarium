@@ -7,7 +7,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name="terrarium",
-    version="0.3.1",
+    version="0.3.2",
 
     description='Earth Engine & GIS tooling Python Package for the GeoSentry Platform.',
     long_description=long_description, 
