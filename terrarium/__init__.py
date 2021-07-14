@@ -1,6 +1,7 @@
 """
 Terrarium Package
 """
+import ee
 
 def initialize(credentials: bytes):
     """
@@ -8,8 +9,6 @@ def initialize(credentials: bytes):
     of a Service Account Agent. The Service Account must be authenticated to use 
     the Earth Engine API and the credentials must be provided as bytes string.
     """
-    import ee
-
     # Check if Earth Engine is already intialized
     if ee.data._initialized:
         return

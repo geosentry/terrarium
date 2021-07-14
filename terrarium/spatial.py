@@ -5,10 +5,17 @@ The spatial module contains function required
 for geometric and spatial manipulations.
 """
 import ee
+import os
 import json
+import math
+import area
 import typing
-
+import googlemaps
+import pyproj
 import shapely.geometry as shapes
+
+from functools import partial
+from shapely.ops import transform
 
 def generate_earthenginegeometry_fromgeojson(geojson: str) -> ee.Geometry:
     """ A function that returns an Earth Engine Geometry for a given GeoJSON string. """
@@ -88,12 +95,10 @@ def generate_area(shape: shapes.Polygon) -> dict:
         raise RuntimeError("could not calculate area. not a shapely polygon")
 
     try:
-        from area import area
-
         # Convert the shape into mapping
         data = shapes.mapping(shape)
         # Calculate the area of the shape in SQM
-        geoarea = area(data)
+        geoarea = area.area(data)
 
     except Exception as e:
         raise RuntimeError(f"could not calculate area. error: {e}")
@@ -126,9 +131,6 @@ def generate_centroid(shape: shapes.Polygon) -> dict:
 def generate_location(longitude: float, latitude: float) -> dict:
     """ A function that returns the location address for a given set of coordinates as longitude and latitude values. """
     try:
-        import os
-        import googlemaps
-
         # Retrieve the Google Maps Geocoding API Key
         geocodingapikey = os.environ['MAPS_GEOCODING_APIKEY']
         # Create the Google Maps Client
@@ -154,14 +156,12 @@ def reshape_polygon(shape: shapes.Polygon) -> shapes.Polygon:
         raise RuntimeError("could not reshape polygon. not a shapely polygon")
 
     try:
-        from math import sqrt
-
         # Retrieve the bounding coordinates
         minx, miny, maxx, maxy = shape.bounds
         # Calculate the polygon centroid
         centroid = [(maxx+minx)/2, (maxy+miny)/2]
         # Calculate the polygon diagonal
-        diagonal = sqrt((maxx-minx)**2+(maxy-miny)**2)
+        diagonal = math.sqrt((maxx-minx)**2+(maxy-miny)**2)
 
     except Exception as e:
         raise RuntimeError(f"could not reshape polygon. could not calculate polygon metrics. error: {e}")
@@ -195,10 +195,6 @@ def reshape_point(shape: shapes.Point, buffer: int = 2.5) -> shapes.Polygon:
         raise RuntimeError(f"could not reshape point. could not calculate point metrics. error: {e}.")
 
     try:
-        import pyproj
-        from functools import partial
-        from shapely.ops import transform
-
         # Construct the projection partial
         projection = partial(
             pyproj.transform, 
