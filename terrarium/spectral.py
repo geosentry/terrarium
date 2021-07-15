@@ -38,14 +38,14 @@ def truecolor_algorithm(image: ee.Image) -> ee.Image:
     try:
         # Upsample the true color image with bicubic interpolation
         upsampled = tcbase.resample('bicubic')
-        # Reproject the upsampled image to the EPSG:4326 CRS
-        upsampled = upsampled.reproject(crs="EPSG:4326", scale=1)
+        # Reproject the upsampled image to it's native CRS at a 1m scale.
+        tc = upsampled.reproject(tcbase.projection(), scale=1)
 
     except ee.EEException as e:
         raise ee.EEException(f"true color upsampling failed. {e}")
 
     # Return the final true color image
-    return upsampled
+    return tc
 
 def ndvi_algorithm(image: ee.Image) -> ee.Image:
     """
@@ -86,8 +86,8 @@ def ndvi_algorithm(image: ee.Image) -> ee.Image:
     try:
         # Upsample the NDVI image with bicubic interpolation
         upsampled = ndvibase.resample('bicubic')
-        # Reproject the upsampled image to the EPSG:4326 CRS
-        upsampled = upsampled.reproject(crs="EPSG:4326", scale=1)
+        # Reproject the upsampled image to it's native CRS at a 1m scale.
+        upsampled = upsampled.reproject(ndvibase.projection(), scale=1)
     
     except ee.EEException as e:
         raise ee.EEException(f"ndvi upsampling failed. {e}")
@@ -167,6 +167,15 @@ def generate_spectral_image(date: datetime.datetime, geometry: ee.Geometry, inde
 
     except ee.EEException as e:
         raise RuntimeError(f"could not create spectral image. {e}")
+
+    try:
+        # Retrieve the projection of the Sentinel-2 Image    
+        projection = transformed_collection.first().projection()
+        # Reproject the clipped image to its native CRS.
+        image = image.reproject(projection)
+
+    except ee.EEException as e:
+        raise RuntimeError(f"could not reproject spectral image. {e}")
 
     # Return the image
     return image
