@@ -3,7 +3,7 @@
 
 ### **Terrarium** is a Python Package that contains the **Earth Engine** and **GIS** related tooling for the **GeoSentry** 🌍 Platform.
 
-**Version: 0.3.2**  
+**Version: 0.4.0**  
 **Language: Python 3.9**  
 **License: MIT**  
 **Status: In Development**  
@@ -22,9 +22,6 @@ The *Truecolor* bands available to the L2A collection is also used for generatio
 Cloudiness values are generated using *Sentinel-2 Cloud Probability* dataset which is also available on the Earth Engine Catalog with the Collection ID ``COPERNICUS/S2_CLOUD_PROBABILITY``.
 
 **Terrarium** also uses JAXA's **ALOS DSM** dataset for altitude based topographical analysis. The dataset is available with the Collection ID ``JAXA/ALOS/AW3D30/V3_2``.
-
-### Asset Generation
-!todo
 
 
 ## Installation
@@ -51,8 +48,8 @@ Authentication for the Google Earth Engine API is done using a IAM Service Accou
 #### Google Maps Platform
 Authentication for the Google Maps APIs are done using an API Key. The **Terrarium** package currently uses the **Geocoding API** for reverse coding and address resolution. API Keys can be created with the steps specified in this [guide](https://developers.google.com/maps/gmp-get-started#create-project).
 
-1. Create an API Key for the **Geocoding API** and restrict it usage for that API only.
-2. Store the API Key as the environment variable ``MAPS_GEOCODING_APIKEY``.
+1. Create an API Key from the Google Cloud Platform Project
+2. Store the API Key in the environment variable ``MAPS_APIKEY``.
 
 ## Changelog
 The package changelog is located in the ``CHANGELOG.md`` file in the root directory of the repository.
