@@ -2,6 +2,15 @@
 
 **Current Version: v0.2.4**
 
+## v0.4
+
+### v0.4.0
+- Reworked the reshape functions in the spatial module to work with projections that are distorted because of their distance from the equator.
+- The API key for the Maps Platform functionality is now stored in an environment variable 'MAPS_APIKEY'. Changed from 'MAPS_GEOCODING_APIKEY'.
+- Fixed issues with exported image distortions caused by the ``generate_spectral_image`` function because it was reprojecting to EPSG:4326 instead of the native CRS for the latitude and longitude based on the geometry of the image region.
+- Reworked the export module to use the projection of the Image while exporting. The function also requires a bucket name now.
+- Added a function to retrieve the status of an export task from a task ID and the project ID.
+
 ## v0.3
 
 ### v0.3.2
