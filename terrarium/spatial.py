@@ -133,7 +133,7 @@ def generate_location(longitude: float, latitude: float) -> dict:
     """ A function that returns the location address for a given set of coordinates as longitude and latitude values. """
     try:
         # Retrieve the Google Maps Geocoding API Key
-        geocodingapikey = os.environ['MAPS_GEOCODING_APIKEY']
+        geocodingapikey = os.environ['MAPS_APIKEY']
         # Create the Google Maps Client
         gmaps = googlemaps.Client(key=geocodingapikey)
 
