@@ -43,21 +43,29 @@ def export_image(image: ee.Image, bucket: str, name: str) -> ee.batch.Task:
     except Exception as e:
         raise RuntimeError(f"could not create image export task. {e}.")
 
-def get_taskstatus(taskid: str, project: str) -> dict:
-    """ 
-    A function that returns the status of an Earth Engine export task 
-    given the project ID and the task ID of the export task. 
+def get_taskstatus(operationid: str = None, taskid: str = None, project: str = None) -> dict:
+    """
+    A function that returns the status of an Earh Engine export task.
+    Accepts the full operation ID string in the format of 'projects/{projectid}/operations/{taskid}' or
+    accepts the taskid and project ID as arguments and constructs tje operation ID from them.
 
     The task ID for a Task object can be retrieved from its 'id' property.
+    The operation ID for a Task object can be retrieved from its 'name' property.
     """
-    try:
+    # Check if operation ID is given
+    if not operationid:
+        # Check if task ID and project ID are given
+        if not taskid or not project:
+            raise RuntimeError("could not check task status. task ID and project ID must be specified if operation ID is not.")
+
         # Construct the operations identifier from the project ID and task ID
-        opid = f"projects/{project}/operations/{taskid}"
+        operationid = f"projects/{project}/operations/{taskid}"
+
+    try:
         # Retrieve the task status from Earth Engine
-        status = ee.data.getOperation(opid)
+        status = ee.data.getOperation(operationid)
+        # Return the task status
+        return status
 
     except Exception as e:
-        raise RuntimeError(f"could not create image export task. {e}.")
-
-    # Return the task status
-    return status
+        raise RuntimeError(f"could not check task status. {e}.")
