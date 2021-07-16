@@ -4,6 +4,10 @@
 
 ## v0.4
 
+### v0.4.1
+- Reworked the initialization runtime to use the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to detect credentials that are used to authenticate with Earth Engine.
+- Reworked the ``get_taskstatus`` function to accept either the full operation ID or accept the task ID and project ID and construct the operation ID from it.
+
 ### v0.4.0
 - Reworked the reshape functions in the spatial module to work with projections that are distorted because of their distance from the equator.
 - The API key for the Maps Platform functionality is now stored in an environment variable 'MAPS_APIKEY'. Changed from 'MAPS_GEOCODING_APIKEY'.
