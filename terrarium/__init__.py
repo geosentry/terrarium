@@ -1,9 +1,10 @@
 """
 Terrarium Package
 """
+import os
 import ee
 
-def initialize(credentials: bytes):
+def initialize(project: str):
     """
     A function that initializes an Earth Engine session with the credentials 
     of a Service Account Agent. The Service Account must be authenticated to use 
@@ -13,16 +14,18 @@ def initialize(credentials: bytes):
     if ee.data._initialized:
         return
 
-    # Check if the credentials are of the correct type
-    if not isinstance(credentials, bytes):
-        raise RuntimeError("could not initialize earth engine. credentials must be a byte string.")
-
     try:
+        # Retrieve the location of the credentials file from the environment variable
+        keyfile = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
         # Construct the Service Account Credentials from the credentials bytes string
-        eecredentials = ee.ServiceAccountCredentials(email=None, key_data=credentials)
-        # Use the Service Account Credentials to authenticate 
-        # with Earth Engine and initialize the session
-        ee.Initialize(credentials=eecredentials)
+        eecredentials = ee.ServiceAccountCredentials(email=None, key_file=keyfile)
+
+        # Use the Service Account Credentials and the project ID
+        # to authenticate with Earth Engine and initialize the session
+        ee.Initialize(credentials=eecredentials, project=project)
+
+    except KeyError as e:
+        raise RuntimeError(f"could not initalize earth engine. cannot find credentials")
 
     except Exception as e:
         raise RuntimeError(f"could not initialize earth engine. error: {e}")
