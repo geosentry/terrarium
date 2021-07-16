@@ -3,7 +3,7 @@
 
 ### **Terrarium** is a Python Package that contains the **Earth Engine** and **GIS** related tooling for the **GeoSentry** 🌍 Platform.
 
-**Version: 0.4.0**  
+**Version: 0.4.1**  
 **Language: Python 3.9**  
 **License: MIT**  
 **Status: In Development**  
@@ -43,7 +43,8 @@ Authentication for the Google Earth Engine API is done using a IAM Service Accou
 1. A Service Account needs to be created and registered with Earth Engin. Refer to the [guide on creating and registering service accounts](https://developers.google.com/earth-engine/guides/service_account) for Earth Engine. 
 2. Grant the ``Storage Object Admin`` IAM role to the Service Account. This allows it to perform exports to a Cloud Storage Bucket.
 3. Generate a key for the Service Account and store it somewhere safe.
-4. **Terrarium** requires the contents of this file as a bytes string to authenticate the Earth Engine Session.
+4. Set the path to this key file in the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable.
+5. **Terrarium** uses this environment variable to point to the credentials used to authenticate the Earth Engine Session.
 
 #### Google Maps Platform
 Authentication for the Google Maps APIs are done using an API Key. The **Terrarium** package currently uses the **Geocoding API** for reverse coding and address resolution. API Keys can be created with the steps specified in this [guide](https://developers.google.com/maps/gmp-get-started#create-project).
